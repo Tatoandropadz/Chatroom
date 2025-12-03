@@ -14,8 +14,8 @@ public class SocketReader extends Thread{
     public void run() {
         while(true) {
             try {
-                String serverMessage = input.readUTF();
-                System.out.println("< "+serverMessage);
+                String message = input.readUTF();
+                System.out.println(message);
             } catch (IOException e) {
                 System.out.println("IOExpection: " + e.getMessage());
             }

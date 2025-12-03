@@ -14,7 +14,7 @@ public class Server {
 
         Scanner scanner = new Scanner(System.in);
         Thread reader = new SocketReader(socket);
-        Thread writer = new SocketWriter(socket, scanner);
+        Thread writer = new SocketWriter(socket, scanner, "Server");
 
         reader.start();
         writer.start();

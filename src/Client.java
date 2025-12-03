@@ -9,13 +9,12 @@ public class Client {
         System.out.println("Connected to server!");
 
         Scanner scanner = new Scanner(System.in);
-        Thread reader = new SocketReader(socket);
-        Thread writer = new SocketWriter(socket, scanner);
+        ChatUser user1 = new ChatUser("Tato", socket, scanner);
 
-        reader.start();
-        writer.start();
+        user1.startReader();
+        user1.startWriter();
 
-        reader.join();
-        writer.join();
+        user1.joinReader();
+        user1.joinWriter();
     }
 }
