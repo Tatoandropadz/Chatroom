@@ -1,26 +1,26 @@
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
+// Basically writes the messages
+
 public class SocketWriter extends Thread{
 
     private final DataOutputStream output;
     private final Scanner scanner;
-    private String username;
+    public volatile boolean exitIntentional = false;
 
-    public SocketWriter(Socket socket, Scanner scanner, String username) throws IOException{
+
+    Boolean getExitIntentional() {
+        return exitIntentional;
+    }
+
+    public SocketWriter(Socket socket, Scanner scanner) throws IOException{
         this.output = new DataOutputStream(socket.getOutputStream());
         this.scanner = scanner;
-        this.username = username;
     }
 
-
-    // This method detects if a user has sent a command to change username and verifies it to be valid
-    Boolean changeUser(String message) {
-        return false;
-    }
 
 
     @Override
@@ -28,10 +28,18 @@ public class SocketWriter extends Thread{
         while(true) {
             try {
                 String message = scanner.nextLine();
-                output.writeUTF(username+": "+message);
+                if (message.startsWith("/exit")) {
+                    // if user wants to exit
+                    exitIntentional = true;
+                }
+                output.writeUTF(message);
                 output.flush();
             } catch (IOException e) {
-                System.out.println("IOExpection: " + e.getMessage());
+                try {
+                    throw new IOException();
+                } catch (IOException ex) {
+                    throw new RuntimeException("The user has exited the program!");
+                }
             }
         }
     }

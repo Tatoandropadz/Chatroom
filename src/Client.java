@@ -2,19 +2,38 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Client {
-    public static void main(String args[]) throws IOException, InterruptedException {
+// The actual client that is being run.
 
-        Socket socket = new Socket("localhost", 8080);
-        System.out.println("Connected to server!");
+public class Client {
+    public static void main(String[] args) throws InterruptedException {
 
         Scanner scanner = new Scanner(System.in);
-        ChatUser user1 = new ChatUser("Tato", socket, scanner);
+        System.out.print("Input address (for local input 'localhost'): ");
+        String address = scanner.next();
+        System.out.print("Input port (for local input '8080'): ");
+        int port = scanner.nextInt();
+        SocketWriter writer = null;
 
-        user1.startReader();
-        user1.startWriter();
+        while (true) {
 
-        user1.joinReader();
-        user1.joinWriter();
+            try {
+                Socket socket = new Socket(address, port);
+                System.out.println("[SERVER] Connected to server!");
+
+
+                Thread reader = new SocketReader(socket);
+                writer = new SocketWriter(socket, scanner);
+
+                reader.start();
+                writer.start();
+
+                reader.join();
+                writer.join();
+                if (writer.getExitIntentional() == true) {
+                    break;
+                }
+            } catch (IOException e) {
+            }
+        }
     }
 }

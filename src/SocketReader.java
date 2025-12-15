@@ -2,6 +2,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+// Basically reads the messages
+
 public class SocketReader extends Thread{
 
     private final DataInputStream input;
@@ -16,8 +18,16 @@ public class SocketReader extends Thread{
             try {
                 String message = input.readUTF();
                 System.out.println(message);
+
+                // Breaks the while loop if user wants to exit
+                if (message.equals("/exit")) {
+                    break;
+                }
             } catch (IOException e) {
-                System.out.println("IOExpection: " + e.getMessage());
+                // In case connection is lost
+
+                System.out.println("--- Connection to server lost. ---");
+                break;
             }
         }
     }

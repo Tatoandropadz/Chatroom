@@ -10,9 +10,9 @@ public class ChatUser {
     private Thread writer;
 
     public ChatUser(String username, Socket socket, Scanner scanner) throws IOException {
-        this.username = username;
         this.reader = new SocketReader(socket);
-        this.writer = new SocketWriter(socket, scanner, username);
+        this.writer = new SocketWriter(socket, scanner);
+        this.username = username;
     }
 
 
